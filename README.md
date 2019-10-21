@@ -12,6 +12,8 @@ To submit your lab, fork [this repository](https://github.com/FAR-Lab/IDD-Fa18-L
 
 I changed the baseline chatbot to respond with questions based on a topic that is input. I used npm one-liner-jokes which produces each joke based on an input tag in the form of a dictionary with the joke and the related tags. As there are only 2200 jokes in this database, I also had a fallback condition that accounted for the chance that the user picks a topic that isn't represented in the database. I also allowed the user to quit by answering the question of "What would you like to hear a joke about?" with the word nothing or after 20 questions have been asked. 
 
+[Modified Code](https://github.com/sandraebirim/IDD-Fa19-Lab6/blob/master/chatServer.js)
+
 ## Record someone trying out your ChatBot
 
 **Using a phone or other video device, record someone trying out your ChatBot. Upload that video to this repository and link to it here!**
