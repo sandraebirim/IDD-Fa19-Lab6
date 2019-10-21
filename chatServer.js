@@ -10,6 +10,9 @@ var http = require('http').Server(app); // connects http library to server
 var io = require('socket.io')(http); // connect websocket library to server
 var serverPort = 8000;
 
+var OneLinerJoke = require('one-liner-joke');
+
+
 
 //---------------------- WEBAPP SERVER SETUP ---------------------------------//
 // use express to create the simple webapp
@@ -30,7 +33,7 @@ io.on('connect', function(socket) {
   var questionNum = 0; // keep count of question, used for IF condition.
   socket.on('loaded', function() { // we wait until the client has loaded and contacted us that it is ready to go.
 
-    socket.emit('answer', "Hey, hello I am \"___*-\" a simple chat bot example."); //We start with the introduction;
+    socket.emit('answer', "Hey, I think I'm funny.."); //We start with the introduction;
     setTimeout(timedQuestion, 5000, socket, "What is your name?"); // Wait a moment and respond with a question.
 
   });
@@ -53,40 +56,41 @@ function bot(data, socket, questionNum) {
   if (questionNum == 0) {
     answer = 'Hello ' + input + ' :-)'; // output response
     waitTime = 5000;
-    question = 'How old are you?'; // load next question
-  } else if (questionNum == 1) {
-    answer = 'Really, ' + input + ' years old? So that means you were born in: ' + (2018 - parseInt(input)); // output response
-    waitTime = 5000;
-    question = 'Where do you live?'; // load next question
-  } else if (questionNum == 2) {
-    answer = 'Cool! I have never been to ' + input + '.';
-    waitTime = 5000;
-    question = 'Whats your favorite color?'; // load next question
-  } else if (questionNum == 3) {
-    answer = 'Ok, ' + input + ' it is.';
-    socket.emit('changeBG', input.toLowerCase());
-    waitTime = 5000;
-    question = 'Can you still read the font?'; // load next question
-  } else if (questionNum == 4) {
-    if (input.toLowerCase() === 'yes' || input === 1) {
-      answer = 'Perfect!';
-      waitTime = 5000;
-      question = 'Whats your favorite place?';
-    } else if (input.toLowerCase() === 'no' || input === 0) {
-      socket.emit('changeFont', 'white'); /// we really should look up the inverse of what we said befor.
-      answer = ''
-      question = 'How about now?';
-      waitTime = 0;
-      questionNum--; // Here we go back in the question number this can end up in a loop
-    } else {
-      question = 'Can you still read the font?'; // load next question
-      answer = 'I did not understand you. Could you please answer "yes" or "no"?'
-      questionNum--;
-      waitTime = 5000;
-    }
-    // load next question
-  } else {
-    answer = 'I have nothing more to say!'; // output response
+    question = 'Do you want to hear a joke??'; // load next question
+  }
+  else if (questionNum == 1) {
+    	if (input.toLowerCase()  == 'no'){
+		answer = "Then I'm confused why you're here";
+		waitTime = 5000;
+		question = "I'm funny so I will just tell you a joke anyways. What do you want to hear a joke about?";
+	}
+	else if (input.toLowerCase()  == 'yes'){
+		answer = "Yay! I'm really funny I promise.";
+		waitTime=5000;
+		question= "What do you want to hear a joke about?";
+	}
+  }
+  else if (questionNum >1  &  questionNum < 20 ) {
+	var getRandomJokeWithTag = OneLinerJoke.getRandomJokeWithTag(input)
+	console.log(getRandomJokeWithTag['body'])
+	if ( input.toLowerCase() == 'nothing'){
+		answer = "Pretty mad you didn't like my jokes but whatever, bye."
+		waitTime = 0;
+		question = ''; 
+	}
+	else if (getRandomJokeWithTag['body'] == ''){
+		answer = "Apparently, I'm not funny enough to have a joke about that :(";
+		waitTime = 5000;
+		question = "Please try another topic! Hopefully I don't disappoint twice.";
+	}
+	else{
+		answer = getRandomJokeWithTag['body'];
+		waitTime = 5000;
+		question = "What do you want to hear a joke about next?"; // load next question
+  	}
+}
+ else {
+    answer = "I know I'm funny but you really need to get a life. Bye!" ; // output response
     waitTime = 0;
     question = '';
   }
